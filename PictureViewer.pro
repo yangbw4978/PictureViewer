@@ -28,3 +28,6 @@ HEADERS  += PVMainWindow.h \
     PVObserver.h
 
 FORMS    += pvmainwindow.ui
+
+RESOURCES += \
+    resource.qrc

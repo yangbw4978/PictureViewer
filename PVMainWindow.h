@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QWidget>
+#include <QPixmap>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QMenu>
@@ -54,6 +55,7 @@ private:
     QAction *exitAction;
     QAction *lastOne;
     QAction *nextOne;
+
 
     //center widget
     PVImageViewer *imageViewer;

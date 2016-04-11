@@ -1,5 +1,5 @@
-#ifndef PVOBSERVER
-#define PVOBSERVER
+#ifndef PVOBSERVER_H
+#define PVOBSERVER_H
 
 #include <QVariant>
 #include <QList>

@@ -55,19 +55,24 @@ void PVMainWindow::initMenuBar()
 {
     QMenu *p_menu = menuBar()->addMenu(tr("&File"));
     openAction = new QAction(tr("Open"), p_menu);
+    openAction->setIcon(QPixmap(":/image/resource/Add folder.png"));
     p_menu->addAction(openAction);
 
     closeAction = new QAction(tr("Close"), p_menu);
+    closeAction->setIcon(QPixmap(":/image/resource/Close folder.png"));
     p_menu->addAction(closeAction);
 
     exitAction = new QAction(tr("Exit"), p_menu);
+    exitAction->setIcon(QPixmap(":/image/resource/Close.png"));
     p_menu->addAction(exitAction);
 
     p_menu = menuBar()->addMenu(tr("&Edit"));
     lastOne = new QAction(tr("Last"), p_menu);
+    lastOne->setIcon(QPixmap(":/image/resource/Left.png"));
     p_menu->addAction(lastOne);
 
     nextOne = new QAction(tr("Next"), p_menu);
+    nextOne->setIcon(QPixmap(":/image/resource/Right.png"));
     p_menu->addAction(nextOne);
 }
 
@@ -122,6 +127,9 @@ void PVMainWindow::initCenterWidget()
 void PVMainWindow::connectSlots2Signals()
 {
     connect(openAction, SIGNAL(triggered()), this, SLOT(openFile()));
+    connect(closeAction, SIGNAL(triggered()), this, SLOT(closeAllFiles()));
+    connect(nextOne, SIGNAL(triggered()), this, SLOT(changeNextPicture()));
+    connect(lastOne, SIGNAL(triggered()), this, SLOT(changeLastPicture()));
 
 }
 
@@ -176,7 +184,8 @@ void PVMainWindow::searcherImageFinished()
 --------------------------------------------------*/
 void PVMainWindow::closeAllFiles()
 {
-
+    iconsViewer->closeViewer();
+    imageViewer->closeViewer();
 }
 
 /*--------------------------------------------------
@@ -188,7 +197,7 @@ void PVMainWindow::closeAllFiles()
 --------------------------------------------------*/
 void PVMainWindow::changeNextPicture()
 {
-
+    iconsViewer->setSelectedChanged(QString("next"));
 }
 
 /*--------------------------------------------------
@@ -200,5 +209,5 @@ void PVMainWindow::changeNextPicture()
 --------------------------------------------------*/
 void PVMainWindow::changeLastPicture()
 {
-
+    iconsViewer->setSelectedChanged(QString("last"));
 }

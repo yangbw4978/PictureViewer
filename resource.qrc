@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>resource/Add folder.png</file>
+        <file>resource/Close folder.png</file>
+        <file>resource/Left.png</file>
+        <file>resource/Right.png</file>
+        <file>resource/Zoom in.png</file>
+        <file>resource/Zoom out.png</file>
+        <file>resource/Close.png</file>
+    </qresource>
+</RCC>

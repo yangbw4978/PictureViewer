@@ -55,6 +55,7 @@ void PVImageListViewer::initGUI()
 void PVImageListViewer::connectSlot2Signal()
 {
     connect(m_listView, SIGNAL(clicked(QModelIndex)), this, SLOT(selectListViewItem(QModelIndex)));
+    //connect(m_listView, SIGNAL(entered(QModelIndex)), this, SLOT(selectListViewItem(QModelIndex)));
 }
 
 void PVImageListViewer::setImagePathData(QString &curDir, QStringList &data)
@@ -82,6 +83,32 @@ void PVImageListViewer::selectListViewItem(QModelIndex index)
             notifyAllObservers();
         }
     }
+}
+
+void PVImageListViewer::setSelectedChanged(QString which)
+{
+    QModelIndex index = m_listView->currentIndex();
+    int curRow = index.row();
+    int curCol = index.column();
+    if(which == QString("next"))
+        curRow++;
+    else if(which == QString("last") && curRow > 0)
+        curRow--;
+    QModelIndex setIndex;
+    setIndex = m_listView->model()->index(curRow, curCol);
+    m_listView->setCurrentIndex(setIndex);
+    m_listView->update();
+    selectListViewItem(setIndex);
+}
+
+void PVImageListViewer::closeViewer()
+{
+    delete m_dataModel;
+    m_dataModel = new PVIconModel;
+    m_listView->setModel(m_dataModel);
+    m_imagePathLabel->setText(tr("Nothing selected"));
+    m_curDir = "";
+    m_curPicturePath = "";
 }
 
 QString PVImageListViewer::getSelectedItem()

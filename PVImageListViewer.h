@@ -21,8 +21,11 @@ public:
     PVImageListViewer();
     ~PVImageListViewer();
     void setImagePathData(QString &curDir, QStringList &data);
+    void closeViewer();
+    void setSelectedChanged(QString which);
     QString getSelectedItem();
     void notifyAllObservers();
+
 public slots:
     void selectListViewItem(QModelIndex index);
 private:

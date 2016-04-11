@@ -1,10 +1,5 @@
 #include "PVImageViewer.h"
 
-PVImageViewerMainScene::PVImageViewerMainScene(QWidget *parent)
-    :QGraphicsScene(parent)
-{
-
-}
 
 PVImageViewer::PVImageViewer()
 {
@@ -15,12 +10,27 @@ void PVImageViewer::initPVImageViewer()
 {
     initData();
     initGUI();
+    connectSignal2Slot();
 }
 
 void PVImageViewer::initGUI()
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     this->setLayout(mainLayout);
+
+    QHBoxLayout *upAreaLayout = new QHBoxLayout;
+
+    //left tool box
+    m_toolBox = new QGroupBox;
+    m_zoomInBtn = new QToolButton(m_toolBox);
+    m_zoomInBtn->setIcon(QPixmap(":/image/resource/Zoom in.png"));
+    m_zoomOutBtn = new QToolButton(m_toolBox);
+    m_zoomOutBtn->setIcon(QPixmap(":/image/resource/Zoom out.png"));
+    QGridLayout* innerGroupBoxLayout = new QGridLayout(m_toolBox);
+    innerGroupBoxLayout->addWidget(m_zoomInBtn, 1, 1);
+    innerGroupBoxLayout->addWidget(m_zoomOutBtn, 2, 1);
+    m_toolBox->setLayout(innerGroupBoxLayout);
+    upAreaLayout->addWidget(m_toolBox);
 
     //init graphics view
     m_graphicsView = new QGraphicsView;
@@ -32,8 +42,11 @@ void PVImageViewer::initGUI()
     m_graphicsView->setScene(&m_noPictureScene);
     m_graphicsView->setMouseTracking(true);
     m_graphicsView->installEventFilter(this);
+    m_graphicsView->setAcceptDrops(true);
     m_mainScene.installEventFilter(this);
-    mainLayout->addWidget(m_graphicsView);
+    upAreaLayout->addWidget(m_graphicsView);
+    upAreaLayout->setSpacing(20);
+    mainLayout->addLayout(upAreaLayout);
 
     //init position display label
     m_positionDisplay = new QLabel;
@@ -42,6 +55,12 @@ void PVImageViewer::initGUI()
     m_positionDisplay->setFixedSize(QSize(200,20));
     m_positionDisplay->setText("there is no picture");
     mainLayout->addWidget(m_positionDisplay);
+}
+
+void PVImageViewer::connectSignal2Slot()
+{
+    connect(m_zoomInBtn, SIGNAL(pressed()), this, SLOT(zoomIn()));
+    connect(m_zoomOutBtn, SIGNAL(pressed()), this, SLOT(zoomOut()));
 }
 
 /*--------------------------------------------------
@@ -105,25 +124,25 @@ void PVImageViewer::updateViewer()
 
 bool PVImageViewer::eventFilter(QObject *obj, QEvent *e)
 {
-    if(obj == m_graphicsView)
-    {
-        if(e->type() == QEvent::Wheel)
-        {
-            QWheelEvent *wheelEvent = dynamic_cast<QWheelEvent*>(e);
-            if(wheelEvent)
-            {
-                if(wheelEvent->delta() > 0)
-                {
-                    m_graphicsView->scale(pow(1.1, 2), pow(1.1, 2));
-                }
-                else
-                {
-                    m_graphicsView->scale(pow(1/1.1, 2), pow(1/1.1, 2));
-                }
-           }
-           return true;
-       }
-    }
+//    if(obj == m_graphicsView)
+//    {
+//        if(e->type() == QEvent::Wheel)
+//        {
+//            QWheelEvent *wheelEvent = dynamic_cast<QWheelEvent*>(e);
+//            if(wheelEvent)
+//            {
+//                if(wheelEvent->delta() > 0)
+//                {
+//                    m_graphicsView->scale(pow(1.1, 2), pow(1.1, 2));
+//                }
+//                else
+//                {
+//                    m_graphicsView->scale(pow(1/1.1, 2), pow(1/1.1, 2));
+//                }
+//           }
+//           return true;
+//       }
+//    }
     if(obj == m_graphicsView->scene())
     {
         if(e->type() == QEvent::GraphicsSceneMouseMove)
@@ -137,6 +156,25 @@ bool PVImageViewer::eventFilter(QObject *obj, QEvent *e)
         }
     }
     return false;
+}
+
+void PVImageViewer::closeViewer()
+{
+    initData();
+    m_positionDisplay->setText("there is no picture");
+    m_graphicsView->scene()->clear();
+    m_noPictureScene.addText("Please add the pictures");
+    m_graphicsView->setScene(&m_noPictureScene);
+}
+
+void PVImageViewer::zoomIn()
+{
+    m_graphicsView->scale(pow(1.1, 2), pow(1.1, 2));
+}
+
+void PVImageViewer::zoomOut()
+{
+    m_graphicsView->scale(pow(1/1.1, 2), pow(1/1.1, 2));
 }
 
 void PVImageViewer::updatePosDisplay(const QString pos)

@@ -7,28 +7,19 @@
 #include <QGraphicsScene>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QSplitter>
+#include <QGridLayout>
 #include <QEvent>
 #include <QWheelEvent>
 #include <QCursor>
 #include <QLabel>
 #include <QBrush>
 #include <QImage>
+#include <QToolButton>
+#include <QAction>
+#include <QGroupBox>
+#include <QPixmap>
 #include <math.h>
 #include <PVObserver.h>
-
-class PVImageViewerMainScene : public QGraphicsScene
-{
-    Q_OBJECT
-public:
-    PVImageViewerMainScene(QWidget *parent = 0);
-
-
-protected:
-    //void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    //void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    //void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-};
 
 class PVImageViewer : public QWidget, public PVObserver
 {
@@ -37,13 +28,17 @@ public:
     PVImageViewer();
     void setFilePath(QString &path);
     void updateViewer();
+    void closeViewer();
     bool eventFilter(QObject *obj, QEvent *e);
     void updateData(QVariant &data);
-
+public slots:
+    void zoomIn();
+    void zoomOut();
 private:
     void initPVImageViewer();
     void initData();
     void initGUI();
+    void connectSignal2Slot();
     void updatePosDisplay(const QString pos);
 private:
     //widget
@@ -52,12 +47,14 @@ private:
     QGraphicsScene m_mainScene;
     QLabel *m_positionDisplay;
 
+    QGroupBox *m_toolBox;
+    QToolButton *m_zoomInBtn;
+    QToolButton *m_zoomOutBtn;
     //data
     QString fileDir;
     QImage *curImage;
     bool isImageChanged;
     bool hasFile;
-    QRectF initRectF;
     QPointF curPos;
 };
 
